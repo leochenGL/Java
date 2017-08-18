@@ -1,3 +1,24 @@
+
+
+
+  -- Table: public.category
+
+-- DROP TABLE public.category;
+
+CREATE TABLE public.category
+(
+  id integer NOT NULL,
+  name character varying(20),
+  CONSTRAINT pk_category PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.category
+  OWNER TO postgres;
+
+
+
 -- Table: public.product
 
 -- DROP TABLE public.product;
@@ -32,20 +53,3 @@ CREATE INDEX product_tags_idx
 
 
 
-
-
-  -- Table: public.category
-
--- DROP TABLE public.category;
-
-CREATE TABLE public.category
-(
-  id integer NOT NULL,
-  name character varying(20),
-  CONSTRAINT pk_category PRIMARY KEY (id)
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE public.category
-  OWNER TO postgres;
