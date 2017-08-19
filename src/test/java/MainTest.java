@@ -11,6 +11,7 @@ import com.hibernate.tutorial.Product;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.junit.Assert;
 
 /**
  * Unit test for simple App.
@@ -24,7 +25,7 @@ public class MainTest
 
     
     @org.junit.Test
-    public void testCategory(){
+    public void testCategoryInsertion(){
         String name = "Penalty";
         category = new Category();
         session = HibernatePersistence.getSessionFactory().openSession();
@@ -39,23 +40,56 @@ public class MainTest
     }
     
     @org.junit.Test
-    public void testProduct(){
+    public void testProductInsertion(){
         product = new Product();
         session = HibernatePersistence.getSessionFactory().openSession();
-        product.setName("COKE");
+        product.setName("COKE CREATED");
         product.setCode("C002");
         product.setPrice(new BigDecimal("18.00"));
-        String[] array = {"leo", "julito", "esteban", "andres", "david"};
-        product.setTags(array);
+        String[] namesArray = {"leo", "julito", "esteban", "andres", "david"};
+        product.setTags(namesArray);
         product.setCategory(category);
         session.beginTransaction();
 
-        
+
         Integer productId =(Integer) session.save(product);
         session.getTransaction().commit();
         product = (Product) session.get(Product.class, productId);
-        
-        assertEquals("COKE",product.getName());
-        assertEquals(category.getId(), product.getCategory().getId());
+        //asserts
+        Assert.assertArrayEquals(namesArray, product.getTags());
+    }
+
+    @org.junit.Test
+    public void testProductCreateUpdate(){
+        product = new Product();
+        session = HibernatePersistence.getSessionFactory().openSession();
+        product.setName("COKE CREATED/UPDATED");
+        product.setCode("C002");
+        product.setPrice(new BigDecimal("18.00"));
+        //arrays
+        String[] namesArray = {"leo", "julito", "esteban", "andres", "david"};
+        String[] lastNamesArray = {"chen", "nunez", "guevara", "arcia", "mulgrave"};
+
+        product.setTags(namesArray);
+        product.setCategory(category);
+        session.beginTransaction();
+
+
+        Integer productId =(Integer) session.save(product);
+        session.getTransaction().commit();
+        product = (Product) session.get(Product.class, productId);
+        //assert
+        Assert.assertArrayEquals(namesArray, product.getTags());
+
+
+        //UPDATE
+        session.beginTransaction();
+        product.setTags(lastNamesArray);
+        session.save(product);
+        session.getTransaction().commit();
+        //GET AGAIN UPDATED PRODUCT
+        product = (Product) session.get(Product.class, productId);
+        //assert
+        Assert.assertArrayEquals(lastNamesArray, product.getTags());
     }
 }
